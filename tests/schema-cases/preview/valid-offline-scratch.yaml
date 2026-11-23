@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# A preview that stays offline and writes to scratch space
+supported: true
+network: none
+local_writes: scratch_only

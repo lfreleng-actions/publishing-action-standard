@@ -33,5 +33,25 @@ a pull request, not the full set:
 
 ## Repository specifics
 
-None: working in this repository needs nothing beyond the organisation
-guidelines.
+This repository holds the publishing action standard: Markdown
+specifications, JSON Schemas and examples. This overlay applies to
+actions created from `actions-template`, and nobody creates a
+repository from it. `overlay/apply.md` instructs work in **other**
+repositories; it does not govern work here.
+
+- `spec/contract.md` holds the normative rules. Never renumber or reuse
+  a rule identifier: mark a dropped rule as retired instead. A change to
+  a MUST rule needs an ADR in `docs/adr/`.
+- Keep `spec/vocabulary.md`, the schemas under `schema/`, the files
+  under `examples/` and `conformance/scenarios.md` consistent with the
+  contract in the same pull request. The pre-commit hooks check the
+  examples against the schemas; add each new example to their lists.
+- A schema change needs matching accept and reject cases under
+  `tests/schema-cases/`; `tests/check-schema-cases.sh` runs them under
+  both regex dialects. Anchor patterns with `(?![\s\S])`, not `$`,
+  which matches before a trailing newline in Python.
+- `adoption/matrix.md` records facts: cite the evidence or the tracking
+  issue for each entry, and update it when a gap closes.
+- Write Markdown that passes the `write-good` hook: active voice, and
+  none of the hedging words it flags. Rephrase rather than disabling
+  the hook.

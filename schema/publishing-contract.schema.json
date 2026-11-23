@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lfreleng-actions/publishing-action-standard/main/schema/publishing-contract.schema.json",
+  "title": "Publishing action contract declaration",
+  "description": "Declares how a publishing action meets the lfreleng-actions publishing action contract (spec/contract.md). Repositories keep it at .github/publishing-contract.yaml (PUB-GEN-01).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "standard_commit",
+    "profiles",
+    "unit",
+    "sidecars_counted",
+    "preview",
+    "live_run",
+    "selection",
+    "duplicates",
+    "failure",
+    "aliases",
+    "deviations"
+  ],
+  "properties": {
+    "contract_version": {
+      "description": "Contract version the action follows.",
+      "const": 1
+    },
+    "standard_commit": {
+      "description": "Full commit SHA of publishing-action-standard that the action follows (PUB-GEN-02).",
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}(?![\\s\\S])"
+    },
+    "profiles": {
+      "description": "Profiles from spec/profiles.md that describe how the action publishes.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "artifact_upload",
+          "staged_release",
+          "build_and_publish",
+          "package_upload"
+        ]
+      }
+    },
+    "unit": {
+      "description": "Unit that every count refers to (PUB-OUT-04).",
+      "enum": [
+        "file",
+        "distribution",
+        "package",
+        "chart",
+        "crate",
+        "component",
+        "deployment"
+      ]
+    },
+    "sidecars_counted": {
+      "description": "Whether signature and checksum sidecars count as items (PUB-OUT-04).",
+      "type": "boolean"
+    },
+    "preview": {
+      "description": "Preview support and side effects (PUB-MODE-01, PUB-FX-01).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported"],
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "network": {
+          "enum": ["none", "read_only"]
+        },
+        "local_writes": {
+          "description": "scratch_only: writes stay in private scratch space, which holds at least the results file (PUB-OUT-05). modifies_sources: the action also changes caller files, as a documented input asks (PUB-FX-02).",
+          "enum": ["scratch_only", "modifies_sources"]
+        }
+      },
+      "if": {
+        "properties": {
+          "supported": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": ["network", "local_writes"]
+      },
+      "else": {
+        "properties": {
+          "network": false,
+          "local_writes": false
+        }
+      }
+    },
+    "live_run": {
+      "description": "Side effects of a live run (PUB-FX-01, PUB-FX-02), declared whether or not the action offers a preview.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["local_writes"],
+      "properties": {
+        "local_writes": {
+          "description": "scratch_only: writes stay in private scratch space. modifies_sources: the run also changes caller files, as a documented input asks.",
+          "enum": ["scratch_only", "modifies_sources"]
+        }
+      }
+    },
+    "selection": {
+      "description": "How the action builds its selection (PUB-SEL-03, PUB-SEL-04).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recursive", "symlinks", "exclusions"],
+      "properties": {
+        "recursive": {
+          "type": "boolean"
+        },
+        "symlinks": {
+          "description": "reject: symbolic links fail the run. confine: links resolve and must stay inside the source root.",
+          "enum": ["reject", "confine"]
+        },
+        "exclusions": {
+          "description": "Built-in exclusion patterns.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "duplicates": {
+      "description": "Supported if_exists policies and the default (PUB-DUP-02). The default must appear in policies.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policies", "default"],
+      "properties": {
+        "policies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["fail", "skip_identical", "overwrite"]
+          }
+        },
+        "default": {
+          "enum": ["fail", "skip_identical"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "default": {
+                "const": "fail"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "policies": {
+                "contains": {
+                  "const": "fail"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "default": {
+                "const": "skip_identical"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "policies": {
+                "contains": {
+                  "const": "skip_identical"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "failure": {
+      "description": "Failure controls (PUB-FAIL-01) and atomicity (PUB-FAIL-05).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permit_fail", "fail_fast", "atomic"],
+      "properties": {
+        "permit_fail": {
+          "description": "Whether the action offers permit_fail.",
+          "type": "boolean"
+        },
+        "fail_fast": {
+          "description": "Whether the action offers fail_fast.",
+          "type": "boolean"
+        },
+        "atomic": {
+          "description": "Whether publication succeeds or fails as a whole.",
+          "type": "boolean"
+        }
+      }
+    },
+    "aliases": {
+      "description": "Deprecated names and values kept working beside their canonical replacements (PUB-COMPAT-01). A value alias names the input that accepts it.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "canonical", "alias"],
+        "properties": {
+          "kind": {
+            "enum": ["input", "output", "value"]
+          },
+          "input": {
+            "description": "For kind value: the canonical name of the input that accepts both values.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(?![\\s\\S])"
+          },
+          "canonical": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(?![\\s\\S])"
+          },
+          "alias": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "if": {
+          "properties": {
+            "kind": {
+              "const": "value"
+            }
+          }
+        },
+        "then": {
+          "required": ["input"]
+        },
+        "else": {
+          "properties": {
+            "input": false
+          }
+        }
+      }
+    },
+    "deviations": {
+      "description": "Known departures from contract rules (PUB-GEN-03).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule", "reason", "issue"],
+        "properties": {
+          "rule": {
+            "type": "string",
+            "pattern": "^PUB-[A-Z]+-[0-9]{2}(?![\\s\\S])"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 10
+          },
+          "issue": {
+            "type": "string",
+            "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/(issues|pull)/[1-9][0-9]*(?![\\s\\S])"
+          }
+        }
+      }
+    }
+  }
+}

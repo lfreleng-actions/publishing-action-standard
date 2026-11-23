@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# A deviation with its rule, reason and issue
+- rule: PUB-SEL-05
+  reason: An empty selection still succeeds, as earlier releases did.
+  issue: https://github.com/example-org/example-publish-action/issues/1

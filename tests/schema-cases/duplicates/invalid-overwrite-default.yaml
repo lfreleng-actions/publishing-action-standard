@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# overwrite is never the default (PUB-DUP-02)
+policies:
+  - overwrite
+default: overwrite

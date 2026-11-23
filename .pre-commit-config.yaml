@@ -438,3 +438,43 @@ repos:
         types:
           - yaml
       - id: check-readthedocs
+
+      # The standard's schemas must be valid JSON Schema, and the
+      # examples must validate against them. Each hook runs when the
+      # schema or an example changes, and names its files itself:
+      # passed filenames would make a changed schema validate against
+      # itself as an instance. Add new examples to the lists below.
+      - id: check-metaschema
+        name: Check publishing standard schemas
+        files: ^schema/[^/]+\.schema\.json$
+      - id: check-jsonschema
+        name: Validate example contract declarations
+        args:
+          - --schemafile
+          - schema/publishing-contract.schema.json
+          - examples/artifact-upload.yaml
+          - examples/staged-release.yaml
+        files: ^(schema/publishing-contract\.schema\.json|examples/[^/]+\.yaml)$
+        pass_filenames: false
+      - id: check-jsonschema
+        name: Validate example results
+        args:
+          - --schemafile
+          - schema/results.schema.json
+          - examples/results.json
+        files: ^(schema/results\.schema\.json|examples/results\.json)$
+        pass_filenames: false
+
+  # Each schema must reject the malformed cases under
+  # tests/schema-cases/, under both the ECMAScript and the Python regex
+  # dialects, since tools that read the declarations use either.
+  - repo: local
+    hooks:
+      - id: schema-cases
+        name: Check schemas against accept and reject cases
+        entry: tests/check-schema-cases.sh
+        language: python
+        additional_dependencies: ["check-jsonschema==0.39.0"]
+        # yamllint disable-line rule:line-length
+        files: ^(schema/[^/]+\.schema\.json|tests/(check-schema-cases\.sh|schema-cases/.*))$
+        pass_filenames: false

@@ -1,0 +1,12 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# A name alias and a value alias with its input
+- kind: input
+  canonical: repository_name
+  alias: repository
+- kind: value
+  input: if_exists
+  canonical: skip_identical
+  alias: skip-if-identical

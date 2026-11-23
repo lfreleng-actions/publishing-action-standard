@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lfreleng-actions/publishing-action-standard/main/schema/results.schema.json",
+  "title": "Publishing action per-item results",
+  "description": "Format of the JSON file that results_path names, and of the results output (PUB-OUT-05). One object per selected item, in selection order.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "source",
+      "destination",
+      "outcome",
+      "digest",
+      "reason",
+      "detail"
+    ],
+    "properties": {
+      "id": {
+        "description": "Stable identifier, such as a relative path or name@version.",
+        "type": "string",
+        "minLength": 1
+      },
+      "source": {
+        "description": "Path relative to the source root, or null.",
+        "type": ["string", "null"]
+      },
+      "destination": {
+        "description": "Repository path, URL or reference, or null.",
+        "type": ["string", "null"]
+      },
+      "outcome": {
+        "enum": [
+          "published",
+          "already_present",
+          "previewed",
+          "failed",
+          "not_attempted"
+        ]
+      },
+      "digest": {
+        "type": ["string", "null"],
+        "pattern": "^sha256:[0-9a-f]{64}(?![\\s\\S])"
+      },
+      "reason": {
+        "enum": [
+          null,
+          "invalid_item",
+          "identity_mismatch",
+          "exists_identical",
+          "exists_different",
+          "transfer_failed",
+          "rejected",
+          "sidecar_failed",
+          "remote_state_unknown",
+          "timeout",
+          "fail_fast",
+          "run_stopped"
+        ]
+      },
+      "detail": {
+        "description": "Short message for people; never a secret.",
+        "type": ["string", "null"]
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "outcome": {
+              "enum": ["published", "previewed"]
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "reason": {
+              "const": null
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

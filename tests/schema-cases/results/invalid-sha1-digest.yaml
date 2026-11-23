@@ -1,0 +1,12 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Digests use sha256
+- outcome: published
+  reason: null
+  id: app-1.0.0.jar
+  source: app-1.0.0.jar
+  destination: libs-release-local/app-1.0.0.jar
+  digest: "sha1:abc"
+  detail: null
