@@ -1,0 +1,31 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# A complete declaration; invalid-unknown-key.yaml adds one key to it
+contract_version: 1
+standard_commit: '0000000000000000000000000000000000000000'
+profiles:
+  - artifact_upload
+unit: file
+sidecars_counted: true
+preview:
+  supported: true
+  network: none
+  local_writes: scratch_only
+live_run:
+  local_writes: scratch_only
+selection:
+  recursive: true
+  symlinks: reject
+  exclusions: []
+duplicates:
+  policies:
+    - fail
+  default: fail
+failure:
+  permit_fail: true
+  fail_fast: true
+  atomic: false
+aliases: []
+deviations: []

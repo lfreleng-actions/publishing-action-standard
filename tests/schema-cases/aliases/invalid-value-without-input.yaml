@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# A value alias names the input that accepts it
+- kind: value
+  canonical: skip_identical
+  alias: skip-if-identical

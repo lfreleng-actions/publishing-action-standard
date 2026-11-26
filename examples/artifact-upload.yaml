@@ -1,0 +1,54 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Example declaration for a fictional action that uploads a Maven
+# repository tree to an artifact repository. A real declaration lives
+# at .github/publishing-contract.yaml in the action's repository.
+contract_version: 1
+# Replace with the commit of publishing-action-standard you follow
+standard_commit: '0000000000000000000000000000000000000000'
+profiles:
+  - artifact_upload
+unit: file
+# Signatures upload and count as files; generated checksums do neither
+sidecars_counted: true
+preview:
+  supported: true
+  network: none
+  # Scratch space holds the results file
+  local_writes: scratch_only
+live_run:
+  local_writes: scratch_only
+selection:
+  recursive: true
+  symlinks: reject
+  exclusions:
+    - '*.md5'
+    - '*.sha1'
+    - '*.sha256'
+    - '*.sha512'
+duplicates:
+  policies:
+    - fail
+    - skip_identical
+  default: fail
+failure:
+  permit_fail: true
+  fail_fast: true
+  atomic: false
+aliases:
+  - kind: input
+    canonical: repository_name
+    alias: repository
+  # An earlier release spelled this policy with hyphens
+  - kind: value
+    input: if_exists
+    canonical: skip_identical
+    alias: skip-if-identical
+deviations:
+  - rule: PUB-SEL-05
+    reason: >-
+      An empty selection still succeeds, as earlier releases did;
+      failing it by default waits for the next major release.
+    issue: https://github.com/example-org/example-publish-action/issues/1

@@ -1,0 +1,13 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# An item a stopped run never reached
+- outcome: not_attempted
+  reason: run_stopped
+  id: app-1.0.0.jar
+  source: app-1.0.0.jar
+  destination: libs-release-local/app-1.0.0.jar
+  # yamllint disable-line rule:line-length
+  digest: "sha256:2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+  detail: null

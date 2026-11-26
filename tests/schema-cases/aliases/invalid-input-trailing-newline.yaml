@@ -1,0 +1,9 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Python's $ would match before this newline
+- kind: value
+  input: "if_exists\n"
+  canonical: skip_identical
+  alias: skip-if-identical

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "org/example/app/1.0.0/app-1.0.0.jar",
+    "source": "org/example/app/1.0.0/app-1.0.0.jar",
+    "destination": "libs-release-local/org/example/app/1.0.0/app-1.0.0.jar",
+    "outcome": "published",
+    "digest": "sha256:2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+    "reason": null,
+    "detail": null
+  },
+  {
+    "id": "org/example/app/1.0.0/app-1.0.0.pom",
+    "source": "org/example/app/1.0.0/app-1.0.0.pom",
+    "destination": "libs-release-local/org/example/app/1.0.0/app-1.0.0.pom",
+    "outcome": "already_present",
+    "digest": "sha256:fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9",
+    "reason": "exists_identical",
+    "detail": "Destination holds identical content"
+  },
+  {
+    "id": "org/example/app/1.0.0/app-1.0.0.pom.asc",
+    "source": "org/example/app/1.0.0/app-1.0.0.pom.asc",
+    "destination": "libs-release-local/org/example/app/1.0.0/app-1.0.0.pom.asc",
+    "outcome": "failed",
+    "digest": "sha256:baa5a0964d3320fbc0c6a922140453c8513ea24ab8fd0577034804a967248096",
+    "reason": "transfer_failed",
+    "detail": "HTTP 503 after 4 attempts"
+  },
+  {
+    "id": "org/example/app/1.0.0/app-1.0.0-sources.jar",
+    "source": "org/example/app/1.0.0/app-1.0.0-sources.jar",
+    "destination": "libs-release-local/org/example/app/1.0.0/app-1.0.0-sources.jar",
+    "outcome": "not_attempted",
+    "digest": null,
+    "reason": "fail_fast",
+    "detail": null
+  }
+]

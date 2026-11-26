@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Rule identifiers look like PUB-AREA-NN
+- rule: PUB-X-1
+  reason: An empty selection still succeeds.
+  issue: https://github.com/example-org/example-publish-action/issues/1

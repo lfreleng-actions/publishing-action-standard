@@ -1,0 +1,44 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Example declaration for a fictional action that stages a signed
+# bundle, waits for validation and then releases it.
+contract_version: 1
+# Replace with the commit of publishing-action-standard you follow
+standard_commit: '0000000000000000000000000000000000000000'
+profiles:
+  - staged_release
+unit: deployment
+sidecars_counted: false
+preview:
+  supported: true
+  # Publish-mode previews read the staged deployment's state, with a
+  # token that can read but not publish
+  network: read_only
+  # Upload-mode previews bundle unsigned files in scratch space.
+  # Signing needs the private key, a publication credential, so it
+  # waits for the live run (PUB-MODE-04).
+  local_writes: scratch_only
+live_run:
+  local_writes: scratch_only
+selection:
+  recursive: true
+  symlinks: reject
+  exclusions:
+    - 'maven-metadata.xml*'
+    - '_remote.repositories'
+duplicates:
+  policies:
+    - fail
+  default: fail
+failure:
+  # One deployment per run: no batch to continue through
+  permit_fail: false
+  fail_fast: false
+  atomic: true
+aliases:
+  - kind: input
+    canonical: dry_run
+    alias: dry-run
+deviations: []

@@ -1,0 +1,8 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+# Canonical names use snake_case
+- kind: input
+  canonical: dry-run
+  alias: dry_run_old
